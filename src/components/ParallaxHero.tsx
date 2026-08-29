@@ -160,6 +160,22 @@ export default function ParallaxHero() {
       secondaryHeroRef.current.style.pointerEvents =
         heroOpacity > 0.5 ? "auto" : "none";
     }
+
+    // Toggle scrollbar and notify header based on zoom level
+    if (typeof document !== "undefined") {
+      const isMobile = window.innerWidth < 768;
+      const isZoomed = sp >= 0.85 || isZoomLockedRef.current || isMobile;
+
+      if (!isZoomed) {
+        document.documentElement.classList.add("no-scrollbar");
+        document.body.classList.add("no-scrollbar");
+        window.dispatchEvent(new CustomEvent("hero-zoom-status", { detail: { isZoomed: false } }));
+      } else {
+        document.documentElement.classList.remove("no-scrollbar");
+        document.body.classList.remove("no-scrollbar");
+        window.dispatchEvent(new CustomEvent("hero-zoom-status", { detail: { isZoomed: true } }));
+      }
+    }
   }, []);
 
   // --- ResizeObserver for CRT tracking ---
@@ -304,6 +320,10 @@ export default function ParallaxHero() {
       window.removeEventListener("touchmove", handleTouchMove);
       if (window.DeviceOrientationEvent) {
         window.removeEventListener("deviceorientation", handleOrientation);
+      }
+      if (typeof document !== "undefined") {
+        document.documentElement.classList.remove("no-scrollbar");
+        document.body.classList.remove("no-scrollbar");
       }
       if (animFrameRef.current) {
         cancelAnimationFrame(animFrameRef.current);

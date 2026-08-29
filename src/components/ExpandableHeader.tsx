@@ -1,12 +1,38 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function ExpandableHeader() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // On mobile view (< 768px), display header immediately
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setIsVisible(true);
+      return;
+    }
+
+    const handleZoomStatus = (e: Event) => {
+      const customEvt = e as CustomEvent<{ isZoomed: boolean }>;
+      if (customEvt.detail !== undefined) {
+        setIsVisible(customEvt.detail.isZoomed);
+      }
+    };
+
+    window.addEventListener("hero-zoom-status", handleZoomStatus);
+
+    if (window.scrollY > 50) {
+      setIsVisible(true);
+    }
+
+    return () => {
+      window.removeEventListener("hero-zoom-status", handleZoomStatus);
+    };
+  }, []);
 
   return (
-    <header className="fixed top-4 left-0 right-0 z-50 px-4 sm:px-8 max-w-6xl mx-auto pointer-events-auto">
+    <header className={`fixed top-4 left-0 right-0 z-50 px-4 sm:px-8 max-w-6xl mx-auto transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-4 pointer-events-none"}`}>
       {/* Outer Floating Bar */}
       <div className="relative rounded-2xl bg-[#09090b]/90 backdrop-blur-xl border border-white/10 p-3 sm:p-4 shadow-2xl transition-all duration-300">
         
