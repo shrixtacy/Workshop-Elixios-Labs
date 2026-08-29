@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import ZoomedHero from "@/components/ZoomedHero";
 
 // ---- fg-desk.png natural dimensions ----
 const FG_NATURAL_W = 2014;
@@ -10,9 +11,9 @@ const FG_NATURAL_H = 780;
 // ---- CRT screen bounding box within fg-desk.png (as fractions of the natural image) ----
 // These map the CRT monitor glass area in the original 1920x819 image.
 // Tuned to match the reference screenshot (last image the user provided).
-const CRT_LEFT_FRAC = 0.390;
+const CRT_LEFT_FRAC = 0.386;
 const CRT_TOP_FRAC = 0.11;
-const CRT_WIDTH_FRAC = 0.2026;
+const CRT_WIDTH_FRAC = 0.218;
 const CRT_HEIGHT_FRAC = 0.35;
 
 /**
@@ -56,6 +57,7 @@ export default function ParallaxHero() {
   const animFrameRef = useRef<number | null>(null);
   const zoomTargetRef = useRef(0);
   const zoomCurrentRef = useRef(0);
+  const isZoomLockedRef = useRef(false);
 
   const sensitivity = 1;
 
@@ -244,14 +246,20 @@ export default function ParallaxHero() {
       }
     };
 
-    // Capture wheel events — NO page scrolling, only zoom
+    // Capture wheel events for initial zoom; lock at 1 permanently once fully zoomed in
     const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      const delta = e.deltaY / 1500;
-      zoomTargetRef.current = Math.max(
-        0,
-        Math.min(1, zoomTargetRef.current + delta)
-      );
+      if (isZoomLockedRef.current) return;
+
+      if (e.deltaY > 0 && zoomTargetRef.current < 1) {
+        e.preventDefault();
+        const delta = e.deltaY / 1200;
+        const newZoom = Math.min(1, zoomTargetRef.current + delta);
+        zoomTargetRef.current = newZoom;
+        if (newZoom >= 0.98) {
+          isZoomLockedRef.current = true;
+          zoomTargetRef.current = 1;
+        }
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -413,16 +421,15 @@ export default function ParallaxHero() {
               style={{
                 borderRadius: "6px",
                 /* Initial values — will be overwritten by updateCrtPosition */
-                left: "37.2%",
+                left: "38.6%",
                 top: "10%",
-                width: "26.5%",
-                height: "38%",
+                width: "21.8%",
+                height: "35%",
               }}
             >
-              {/* Secondary hero background inside CRT */}
               <div className="absolute inset-0">
                 <Image
-                  src="/images/hero2-bg.png"
+                  src="/images/hero-new-bg.png"
                   alt="Secondary Hero Preview"
                   fill
                   sizes="(max-width: 768px) 30vw, 25vw"
@@ -444,15 +451,7 @@ export default function ParallaxHero() {
           willChange: "opacity",
         }}
       >
-        <Image
-          src="/images/hero2-bg.png"
-          alt="Secondary Hero Background"
-          fill
-          sizes="100vw"
-          priority
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
+        <ZoomedHero />
       </div>
     </div>
   );
