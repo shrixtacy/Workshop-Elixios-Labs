@@ -101,8 +101,9 @@ export default function TextPressure({
     if (!containerRef.current || !titleRef.current) return;
 
     const { width: containerW, height: containerH } = containerRef.current.getBoundingClientRect();
+    if (containerW === 0) return;
 
-    let newFontSize = containerW / (chars.length / 1.8);
+    let newFontSize = containerW / (chars.length * 0.72);
     newFontSize = Math.max(newFontSize, minFontSize);
 
     setFontSize(newFontSize);
@@ -122,10 +123,19 @@ export default function TextPressure({
   }, [chars.length, minFontSize, scale]);
 
   useEffect(() => {
-    const debouncedSetSize = debounce(setSize, 100);
-    debouncedSetSize();
-    window.addEventListener("resize", debouncedSetSize);
-    return () => window.removeEventListener("resize", debouncedSetSize);
+    setSize();
+    if (!containerRef.current) return;
+
+    const observer = new ResizeObserver(() => {
+      setSize();
+    });
+    observer.observe(containerRef.current);
+    window.addEventListener("resize", setSize);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", setSize);
+    };
   }, [setSize]);
 
   useEffect(() => {

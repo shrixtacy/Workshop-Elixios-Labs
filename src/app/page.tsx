@@ -1,3 +1,6 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
 import ParallaxHero from "@/components/ParallaxHero";
 import ExpandableHeader from "@/components/ExpandableHeader";
 import ThickMarquee from "@/components/ThickMarquee";
@@ -9,34 +12,51 @@ import FaqSection from "@/components/FaqSection";
 import StickyFooter from "@/components/StickyFooter";
 
 export default function Home() {
+  const [isZoomed, setIsZoomed] = useState(false);
+
+  useEffect(() => {
+    // Mobile screens (< 768px) display all sections immediately
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setIsZoomed(true);
+      return;
+    }
+
+    const handleZoomStatus = (e: Event) => {
+      const customEvt = e as CustomEvent<{ isZoomed: boolean }>;
+      if (customEvt.detail !== undefined) {
+        setIsZoomed(customEvt.detail.isZoomed);
+      }
+    };
+
+    window.addEventListener("hero-zoom-status", handleZoomStatus);
+
+    if (window.scrollY > 50) {
+      setIsZoomed(true);
+    }
+
+    return () => {
+      window.removeEventListener("hero-zoom-status", handleZoomStatus);
+    };
+  }, []);
+
   return (
-    <main className="w-full min-h-screen bg-zinc-950 overflow-x-hidden relative text-[#d4c5a9]">
-      {/* 1. Floating Expandable Header (Dual Grid Dropdown) */}
+    <main className={`w-full bg-zinc-950 text-[#d4c5a9] relative ${isZoomed ? "min-h-screen overflow-x-hidden" : "h-screen overflow-hidden"}`}>
+      {/* 1. Floating Expandable Header */}
       <ExpandableHeader />
 
-      {/* 2. Parallax Hero (Desktop -> One-Way Zoom into Hero) */}
+      {/* 2. Parallax Hero */}
       <ParallaxHero />
 
-      {/* 3. Thick Infinite Horizontal Scroll Marquee */}
-      <ThickMarquee />
-
-      {/* 4. Live Workshop Spotlight & OptionWheel Tracks Selector */}
-      <LineupSection />
-
-      {/* 5. Our Philosophy / Why Elixios Labs Dual Grid */}
-      <PhilosophySection />
-
-      {/* 6. Program Formats (Workshops vs Bootcamps vs Cohorts 1.0) */}
-      <TrackDetailsSection />
-
-      {/* 7. Ecosystem & Community Bento Grid */}
-      <BentoGridSection />
-
-      {/* 8. Interactive FAQ Accordion */}
-      <FaqSection />
-
-      {/* 9. Sticky Reveal Footer with React Bits TextPressure ("WORKSHOPS") */}
-      <StickyFooter />
+      {/* 3-9. Remaining Page Sections (Revealed smoothly after CRT zoom on desktop) */}
+      <div className={isZoomed ? "block" : "hidden md:hidden"}>
+        <ThickMarquee />
+        <LineupSection />
+        <PhilosophySection />
+        <TrackDetailsSection />
+        <BentoGridSection />
+        <FaqSection />
+        <StickyFooter />
+      </div>
     </main>
   );
 }
