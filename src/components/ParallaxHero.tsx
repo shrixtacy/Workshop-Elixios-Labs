@@ -248,7 +248,8 @@ export default function ParallaxHero() {
 
     // Capture wheel events for initial zoom; lock at 1 permanently once fully zoomed in
     const handleWheel = (e: WheelEvent) => {
-      if (isZoomLockedRef.current) return;
+      // On mobile screens (< 768px), disable zoom transition so touch scroll flows naturally to all sections
+      if (window.innerWidth < 768 || isZoomLockedRef.current) return;
 
       if (e.deltaY > 0 && zoomTargetRef.current < 1) {
         e.preventDefault();
@@ -361,25 +362,25 @@ export default function ParallaxHero() {
         {/* 3. TEXT LAYER — "Elixios Labs" */}
         <div
           ref={textLayerRef}
-          className="absolute inset-0 flex items-center justify-center pointer-events-none will-change-transform"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none will-change-transform px-2"
           style={{
             transform: "translate3d(0px, 0px, 0px)",
-            marginTop: "-28vh",
+            marginTop: "clamp(-28vh, -22vh, -15vh)",
             backfaceVisibility: "hidden",
           }}
         >
           <h1
-            className="flex items-baseline gap-4 md:gap-6 select-none"
+            className="flex items-baseline justify-center gap-2 sm:gap-4 md:gap-6 select-none max-w-[95vw]"
             style={{ color: "#d4c5a9" }}
           >
             <span
-              className="text-7xl sm:text-9xl md:text-[11rem] lg:text-[14rem] font-light tracking-[0.04em] uppercase"
+              className="text-4xl sm:text-7xl md:text-[11rem] lg:text-[14rem] font-light tracking-[0.04em] uppercase"
               style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
             >
               Elixios
             </span>
             <span
-              className="text-7xl sm:text-9xl md:text-[11rem] lg:text-[14rem] italic font-normal tracking-wide"
+              className="text-4xl sm:text-7xl md:text-[11rem] lg:text-[14rem] italic font-normal tracking-wide"
               style={{ fontFamily: "var(--font-playfair), serif" }}
             >
               Labs
@@ -400,7 +401,7 @@ export default function ParallaxHero() {
         >
           <div
             ref={fgContainerRef}
-            className="relative w-full h-full max-w-full scale-[1.85] sm:scale-[1.5] md:scale-[1.12] origin-bottom translate-y-[5px] md:translate-y-[18px]"
+            className="relative w-full h-full max-w-full scale-[2.25] sm:scale-[1.7] md:scale-[1.12] origin-bottom translate-y-[12px] sm:translate-y-[15px] md:translate-y-[18px]"
           >
             <Image
               src="/images/fg-desk.png"
