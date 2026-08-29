@@ -401,7 +401,7 @@ export default function ParallaxHero() {
         >
           <div
             ref={fgContainerRef}
-            className="relative w-full h-full max-w-full scale-[2.25] sm:scale-[1.7] md:scale-[1.12] origin-bottom translate-y-[12px] sm:translate-y-[15px] md:translate-y-[18px]"
+            className="relative w-full h-full max-w-full scale-[3.4] sm:scale-[2.4] md:scale-[1.25] origin-bottom translate-y-[32px] sm:translate-y-[25px] md:translate-y-[18px]"
           >
             <Image
               src="/images/fg-desk.png"
