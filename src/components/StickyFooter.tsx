@@ -94,12 +94,12 @@ export default function StickyFooter() {
 
         {/* Bottom Section: React Bits TextPressure Component for "WORKSHOPS" */}
         <div className="pt-10 pb-4 w-full flex flex-col items-center justify-center">
-          <div className="w-full h-32 sm:h-44 md:h-52 relative flex items-center justify-center">
+          <div className="w-full h-36 sm:h-52 md:h-64 relative flex items-center justify-center">
             <TextPressure
               text="WORKSHOPS"
               textColor="#d4c5a9"
               strokeColor="#d4c5a9"
-              minFontSize={36}
+              minFontSize={48}
               flex
               width
               weight
