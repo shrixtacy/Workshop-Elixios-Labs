@@ -178,6 +178,14 @@ export default function ParallaxHero() {
     }
   }, []);
 
+  // Instantly apply no-scrollbar on desktop initial mount
+  useEffect(() => {
+    if (typeof document !== "undefined" && window.innerWidth >= 768) {
+      document.documentElement.classList.add("no-scrollbar");
+      document.body.classList.add("no-scrollbar");
+    }
+  }, []);
+
   // --- ResizeObserver for CRT tracking ---
   useEffect(() => {
     const container = fgContainerRef.current;

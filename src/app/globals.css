@@ -132,9 +132,15 @@ html, body {
 html.no-scrollbar,
 body.no-scrollbar {
   overflow: hidden !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
 }
 
 html.no-scrollbar::-webkit-scrollbar,
-body.no-scrollbar::-webkit-scrollbar {
+body.no-scrollbar::-webkit-scrollbar,
+html.no-scrollbar *::-webkit-scrollbar,
+body.no-scrollbar *::-webkit-scrollbar {
   display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
