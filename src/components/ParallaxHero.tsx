@@ -359,33 +359,61 @@ export default function ParallaxHero() {
           }}
         />
 
-        {/* 3. TEXT LAYER — "Elixios Labs" */}
+        {/* 3. TEXT LAYER — Desktop (Elixios Labs) & Mobile (Elixios Space + Subtext) */}
         <div
           ref={textLayerRef}
           className="absolute inset-0 flex items-center justify-center pointer-events-none will-change-transform px-2"
           style={{
             transform: "translate3d(0px, 0px, 0px)",
-            marginTop: "clamp(-28vh, -22vh, -15vh)",
+            marginTop: "-28vh",
             backfaceVisibility: "hidden",
           }}
         >
+          {/* DESKTOP VIEW — 100% UNTOUCHED */}
           <h1
-            className="flex items-baseline justify-center gap-2 sm:gap-4 md:gap-6 select-none max-w-[95vw]"
+            className="hidden sm:flex items-baseline justify-center gap-4 md:gap-6 select-none"
             style={{ color: "#d4c5a9" }}
           >
             <span
-              className="text-4xl sm:text-7xl md:text-[11rem] lg:text-[14rem] font-light tracking-[0.04em] uppercase"
+              className="text-7xl md:text-[11rem] lg:text-[14rem] font-light tracking-[0.04em] uppercase"
               style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
             >
               Elixios
             </span>
             <span
-              className="text-4xl sm:text-7xl md:text-[11rem] lg:text-[14rem] italic font-normal tracking-wide"
+              className="text-7xl md:text-[11rem] lg:text-[14rem] italic font-normal tracking-wide"
               style={{ fontFamily: "var(--font-playfair), serif" }}
             >
               Labs
             </span>
           </h1>
+
+          {/* MOBILE ONLY VIEW — Elixios Space + Pushed Up + Subtext */}
+          <div className="flex sm:hidden flex-col items-center text-center -translate-y-16 px-4">
+            <h1
+              className="flex items-baseline justify-center gap-2 select-none mb-1.5"
+              style={{ color: "#d4c5a9" }}
+            >
+              <span
+                className="text-5xl font-light tracking-[0.04em] uppercase"
+                style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
+              >
+                Elixios
+              </span>
+              <span
+                className="text-5xl italic font-normal tracking-wide"
+                style={{ fontFamily: "var(--font-playfair), serif" }}
+              >
+                Space
+              </span>
+            </h1>
+            <p 
+              className="text-xs text-[#d4c5a9] opacity-90 max-w-[280px] leading-relaxed font-light drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
+              style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
+            >
+              A room for people who want to learn, build, and master modern tech.
+            </p>
+          </div>
         </div>
 
         {/* 4. FOREGROUND LAYER (Computer Desk Cutout) */}
